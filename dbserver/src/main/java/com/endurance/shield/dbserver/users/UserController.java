@@ -29,7 +29,7 @@ public class UserController {
     }
 
     @RequestMapping(
-            value = {"/login"},
+            value = {"/loginUser"},
             method = {RequestMethod.POST}
     )
     public void loginUser(@RequestBody Map<String,String> json, HttpServletResponse httpResponse)

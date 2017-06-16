@@ -13,30 +13,66 @@
         <script>
             function login()
             {
-
+              $.ajax({
+                        type: "POST",
+                        url: "http://127.0.0.1:9000/loginUser",
+                        dataType: 'json',
+                        contentType: "application/json; charset=utf-8",
+                        data: JSON.stringify({
+                        "username":$("#username").val(),
+                        "password":$("#password").val()
+                        }),
+                        success : function(){
+                          console.log("Success");
+                        }
+                      });
             }
             function register()
             {
-              
+              $.ajax({
+                        type: "POST",
+                        url: "http://127.0.0.1:9000/createUser",
+                        dataType: 'json',
+                        contentType: "application/json; charset=utf-8",
+                        data: JSON.stringify({
+                        "username":$("#username").val(),
+                        "password":$("#password").val(),
+                        "email":$("#email").val(),
+                        "firstname":$("#firstname").val(),
+                        "lastname":$("#lastname").val(),
+                        "lastname":$("#superpower").val(),
+                        }),
+                        statusCode : {
+                            200: function(response){
+                              console.log("Success");
+                            },
+                            404: function(response){
+
+                            },
+                            400: function(response){
+
+                            },
+                        }
+                      });
             }
             function verify()
             {
                 $.ajax
                     ({
                         type: "GET",
-                        url: 'http://127.0.1.1:9000/checkUser/'+$("#username").val(),
+                        url: 'http://127.0.0.1:9000/checkUser/'+$("#username").val(),
                         statusCode : {
                             200: function(response){
                                 $("#loginDiv").show();
                                 $("#registerDiv").hide();
                                 $("#message").val("You've already registered, login");
-                                $("#btn").on("click",login);
+                                $("#btn").attr("onclick","login()");
                             },
                             404: function(response){
                                 $("#registerDiv").show();
                                 $("#loginDiv").show();
                                 $("#message").val("Register");
-                                $("#btn").on("click",register);
+                                $("#btn").attr("onclick","register()");
                             },
                             400: function(response){
                                 console.log("Something went wrong :( ");
