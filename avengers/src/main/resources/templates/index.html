@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script
+                src="https://code.jquery.com/jquery-3.2.1.min.js"
+                integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+                crossorigin="anonymous"></script>
+        <style>
+          #loginDiv,#registerDiv {
+            display:none;
+          }
+        </style>
+        <script>
+            function login()
+            {
+
+            }
+            function register()
+            {
+              
+            }
+            function verify()
+            {
+                $.ajax
+                    ({
+                        type: "GET",
+                        url: 'http://127.0.1.1:9000/checkUser/'+$("#username").val(),
+                        statusCode : {
+                            200: function(response){
+                                $("#loginDiv").show();
+                                $("#registerDiv").hide();
+                                $("#message").val("You've already registered, login");
+                                $("#btn").on("click",login);
+                            },
+                            404: function(response){
+                                $("#registerDiv").show();
+                                $("#loginDiv").show();
+                                $("#message").val("Register");
+                                $("#btn").on("click",register);
+                            },
+                            400: function(response){
+                                console.log("Something went wrong :( ");
+                            },
+                        }
+                    });
+            }
+        </script>
+    </head>
+    <body>
+        <p id="message">Enter username</p>
+        <br/>
+        USERNAME : <input type="text" id="username"></input>
+        <div id="loginDiv">
+            PASSWORD : <input type="password" id="password"></input>
+        </div>
+        <div id="registerDiv">
+          First Name : <input type="text" id="firstname"></input>
+          Last Name : <input type="text" id="lastname"></input>
+          Email : <input type="email" id="email"></input>
+          Superpower : <input type="text" id="superpower"></input>
+        </div>
+        <br/>
+        <button id="btn" onclick="verify()">Go</button>
+    </body>
+</html>
