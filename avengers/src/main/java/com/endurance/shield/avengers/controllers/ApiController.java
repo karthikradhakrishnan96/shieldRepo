@@ -162,7 +162,9 @@ public class ApiController {
                 }
                 System.out.println(user);
             }
-            servletResponse.setStatus(404);
+            else {
+                servletResponse.setStatus(404);
+            }
         }
         catch (UnirestException e)
         {
@@ -186,10 +188,141 @@ public class ApiController {
             System.out.println(jsonResponse);
             servletResponse.setStatus(jsonResponse.getStatus());
         } catch (UnirestException e) {
-
+            servletResponse.setStatus(400);
         }
 
     }
 
+    @RequestMapping(value = "/getAllBio",method = RequestMethod.GET)
+    public String getAllBio(@CookieValue(value = "token", defaultValue = "") String encrypted, HttpServletResponse servletResponse)
+    {
+        System.out.println("In Get all bio");
+        Map<String ,String> userDetails = KeyManager.decrypt(this.env.getProperty("secret.key"),encrypted);
+        Map<String,String> cookieMap = new HashMap<>();
+        cookieMap.put("cookie",encrypted);
+        try
+        {
+            HttpResponse<JsonNode> jsonResponse = Unirest.post("http://127.0.0.1:6969/checkCookie")
+                    .header("accept", "application/json")
+                    .header("Content-Type","application/json")
+                    .body(new JSONObject(cookieMap))
+                    .asJson();
+            if(jsonResponse.getStatus() == 200)
+            {
+                jsonResponse = Unirest.get("http://127.0.0.1:6969/getAllBio")
+                        .header("accept", "application/json")
+                        .header("Content-Type","application/json")
+                        .queryString("username",userDetails.get("username"))
+                        .asJson();
+                System.out.println("Returning "+jsonResponse.getBody().toString());
+                return jsonResponse.getBody().toString();
+            }
+        }
+        catch (Exception e)
+        {
 
+        }
+        return null;
+    }
+
+    @RequestMapping(value = "/createTodo",method = RequestMethod.POST)
+    public void createTodo(@CookieValue(value = "token", defaultValue = "") String encrypted,@RequestBody Map<String,String> todoDetails, HttpServletResponse servletResponse)
+    {
+        System.out.println("Create TO DO");
+        Map<String ,String> userDetails = KeyManager.decrypt(this.env.getProperty("secret.key"),encrypted);
+        Map<String,String> cookieMap = new HashMap<>();
+        cookieMap.put("cookie",encrypted);
+        Map<String,String> todoMap = new HashMap<>();
+        todoMap.put("username",userDetails.get("username"));
+        todoMap.put("task",todoDetails.get("task"));
+        boolean isPrivate = Boolean.valueOf(todoDetails.get("private"));
+        String priv = isPrivate?"PRIVATE":this.env.getProperty("app.name");
+        todoMap.put("type",priv);
+        try
+        {
+            HttpResponse<JsonNode> jsonResponse = Unirest.post("http://127.0.0.1:6969/checkCookie")
+                    .header("accept", "application/json")
+                    .header("Content-Type","application/json")
+                    .body(new JSONObject(cookieMap))
+                    .asJson();
+            if(jsonResponse.getStatus() == 200)
+            {
+                jsonResponse = Unirest.post("http://127.0.0.1:6969/createItem")
+                        .header("accept", "application/json")
+                        .header("Content-Type","application/json")
+                        .body(new JSONObject(todoMap))
+                        .asJson();
+                servletResponse.setStatus(jsonResponse.getStatus());
+            }
+        }
+        catch (Exception e)
+        {
+
+        }
+    }
+    @RequestMapping(value = "/createBio",method = RequestMethod.POST)
+    public void createBio(@CookieValue(value = "token", defaultValue = "") String encrypted,@RequestBody Map<String,String> bioDetails, HttpServletResponse servletResponse)
+    {
+        System.out.println("Create Bio");
+        Map<String ,String> userDetails = KeyManager.decrypt(this.env.getProperty("secret.key"),encrypted);
+        Map<String,String> cookieMap = new HashMap<>();
+        cookieMap.put("cookie",encrypted);
+        Map<String,String> bioMap = new HashMap<>();
+        bioMap.put("userName",userDetails.get("username"));
+        bioMap.put("bioHtml",bioDetails.get("html"));
+        String priv = this.env.getProperty("app.name");
+        bioMap.put("type",priv);
+        System.out.println("Accessed by: "+userDetails.get("username"));
+        try
+        {
+            HttpResponse<JsonNode> jsonResponse = Unirest.post("http://127.0.0.1:6969/checkCookie")
+                    .header("accept", "application/json")
+                    .header("Content-Type","application/json")
+                    .body(new JSONObject(cookieMap))
+                    .asJson();
+            if(jsonResponse.getStatus() == 200)
+            {
+                jsonResponse = Unirest.post("http://127.0.0.1:6969/createBio")
+                        .header("accept", "application/json")
+                        .header("Content-Type","application/json")
+                        .body(new JSONObject(bioMap))
+                        .asJson();
+                System.out.println("Returning "+jsonResponse.getStatus());
+                servletResponse.setStatus(jsonResponse.getStatus());
+            }
+        }
+        catch (Exception e)
+        {
+
+        }
+    }
+    @RequestMapping(value = "/markAsDone",method = RequestMethod.POST)
+    public void markAsDone(@CookieValue(value = "token", defaultValue = "") String encrypted,@RequestBody Map<String,Object> todoDetails,HttpServletResponse httpServletResponse)
+    {
+        System.out.println("Entering markAsDone");
+        System.out.println(todoDetails);
+        Map<String,String> cookieMap = new HashMap<>();
+        cookieMap.put("cookie",encrypted);
+        try{
+            HttpResponse<JsonNode> jsonResponse = Unirest.post("http://127.0.0.1:6969/checkCookie")
+                    .header("accept", "application/json")
+                    .header("Content-Type","application/json")
+                    .body(new JSONObject(cookieMap))
+                    .asJson();
+            if(jsonResponse.getStatus() == 200)
+            {
+                jsonResponse = Unirest.post("http://127.0.0.1:6969/markAsDone")
+                        .header("accept", "application/json")
+                        .header("Content-Type","application/json")
+                        .body(new JSONObject(todoDetails))
+                        .asJson();
+                System.out.println("Returning "+jsonResponse.getStatus());
+                httpServletResponse.setStatus(jsonResponse.getStatus());
+            }
+        }
+        catch (Exception e)
+        {
+
+        }
+    }
 }
