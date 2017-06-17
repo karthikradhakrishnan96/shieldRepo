@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.*;
+import sun.misc.Cleaner;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
@@ -87,6 +88,8 @@ public class ApiController {
                         .body(new JSONObject(cookieMap))
                         .asJson();
                 System.out.println(jsonResponse.getStatus());
+                if(jsonResponse.getStatus()!=200)
+                    servletResponse.setStatus(400);
                 //TODO: If failed, return server N/A
             }
         }
@@ -276,7 +279,7 @@ public class ApiController {
         cookieMap.put("cookie",encrypted);
         Map<String,String> bioMap = new HashMap<>();
         bioMap.put("userName",userDetails.get("username"));
-        bioMap.put("bioHtml",bioDetails.get("html"));
+        bioMap.put("bioHtml", com.endurance.shield.xmen.utils.Cleaner.cleanHtml(bioDetails.get("html")));
         String priv = this.env.getProperty("app.name");
         bioMap.put("type",priv);
         System.out.println("Accessed by: "+userDetails.get("username"));

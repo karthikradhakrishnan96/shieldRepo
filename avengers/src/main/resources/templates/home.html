@@ -6,11 +6,28 @@
             {
                 border: 2px solid black;
             }
+            .close {
+                    background:none!important;
+                     border:none;
+                     padding:0!important;
+                     align: right;
+                    /*optional*/
+                    font-family:arial,sans-serif; /*input has OS specific font-family*/
+                     color:#069;
+                     text-decoration:underline;
+                     cursor:pointer;
+                }
+                .white-bg{
+                    background:#ffffff !important;
+                }
         </style>
         <script
                 src="https://code.jquery.com/jquery-3.2.1.min.js"
                 integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
                 crossorigin="anonymous"></script>
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"></link>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
         <script>
             function init()
             {
@@ -90,20 +107,22 @@
             }
             function populateToDos(toDos)
             {
-                contentDiv = document.getElementById("toDos");
+        contentDiv = document.getElementById("toDos");
                 contentDiv.innerHTML = "";
                 console.log(toDos);
                 for(var i=0;i!=toDos.length;i++)
                 {
                     console.log(toDos[i]);
                     mDiv = document.createElement("div");
-                    mDiv.className = "toDo";
+                    mDiv.className = toDos[i].type === "PRIVATE"?"alert alert-danger":"alert alert-info";
                     mBtn = document.createElement("button");
-                    mBtn.innerHTML = "Remove";
+                    mBtn.innerHTML = "X";
+                    mBtn.className = "close";
+
                     mBtn.addEventListener("click",removeToDo,false,toDos[i]);
                     mBtn.myData = toDos[i];
                     mP = document.createElement("span");
-                    mP.innerHTML = toDos[i].task + " FOR " + toDos[i].type
+                    mP.innerHTML = toDos[i].task + "   (" + toDos[i].type +")";
                     mDiv.appendChild(mP);
                     mDiv.appendChild(mBtn);
                     if(!toDos[i].closed)
@@ -142,33 +161,74 @@
                 for(var i=0;i!=bios.length;i++)
                 {
                     mDiv = document.createElement("div");
-                    mDiv.className = "toDo";
-                    mDiv.innerHTML = bios[i].userName + " : " + bios[i].bioHtml;
+                    mDiv.className = "alert white-bg";
+                    mP = document.createElement("p");
+                    mP.innerHTML = bios[i].userName;
+                    mP.style = "text-align:center";
+                    mDiv.appendChild(mP);
+                    mDiv.innerHTML += "<hr/>"+ bios[i].bioHtml;
                     contentDiv.appendChild(mDiv);
                 }
             }
         </script>
     </head>
     <body onload="init()">
-            Hello from home
-            <button onclick="addToDo()">Add ToDo</button>
-            <button onclick="addBio()">Add Bio</button>
-            TODOS
-            <input type="text" placeholder="Task to complete" id="task"></input>
-            <label><input type="radio" name="squad" value="true"></input>Private</label>
-            <label><input type="radio" name="squad" value="false"></input>Squad</label>
-
-            BIOS
-            <input type="text" placeholder="Update Bio" id="bio"></input>
-            <div id="toDos">
-
+    <div class="container">
+        <br/>
+        <div class="row">
+            <div class="col-md-11" align="center">
+                <h2>DASHBOARD</h2>
             </div>
-            BIOS
-            <div id="bios">
-
+            <div class="col-md-1" align="right">
+                <form method="post" action="/logoutUser">
+                    <input type="submit" class="btn btn-default" value="Logout"/>
+                </form>
             </div>
-            <form method="post" action="/logoutUser">
-                <input type="submit" value="Logout"/>
-            </form>
+        </div>
+        <br/>
+        <div class="row card">
+            <div class="col-md-5 form-group well">
+                <div>
+                    <input type="text" class="form-control" placeholder="Add a new ToDo" id="task"></input>
+                    <br/>
+                    <div class="btn-group" data-toggle="buttons">
+                        <label class="btn btn-small btn-primary active">
+                            <input type="radio" name="squad" value="true" id="option1" autocomplete="off" checked="true"></input> Private
+                        </label>
+                        <label class="btn btn-small btn-primary">
+                            <input type="radio" name="squad" value="false" id="option2" autocomplete="off"></input> Squad
+                        </label>
+                    </div>
+                    <button class="btn btn-default" onclick="addToDo()">Add ToDo</button>
+                </div>
+                <br/>
+                <br/>
+                Open ToDos
+                <br/>
+                <br/>
+                <div id="toDos" class="col-md-12">
+
+                </div>
+            </div>
+            <div class="col-md-2"></div>
+            <div class="col-md-5 form-group well">
+                <input type="text" class="form-control" placeholder="Update Bio" id="bio"></input>
+                <div align="center">
+                    <br/>
+                    <button class="btn btn-default" onclick="addBio()">Update Bio</button>
+                </div>
+                <br/>
+                <br/>
+                Superhero Updates
+                <br/>
+                <br/>
+                <div id="bios" class="col-md-12">
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
     </body>
 </html>

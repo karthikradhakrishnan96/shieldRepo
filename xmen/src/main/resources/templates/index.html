@@ -5,6 +5,8 @@
                 src="https://code.jquery.com/jquery-3.2.1.min.js"
                 integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
                 crossorigin="anonymous"></script>
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"></link>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
         <style>
           #loginDiv,#registerDiv {
             display:none;
@@ -22,8 +24,11 @@
                         "username":$("#username").val(),
                         "password":$("#password").val()
                         }),
-                        success : function(){
-                          console.log("Success");
+                        statusCode : {
+                          200 :   function(){
+                          console.log("Logged in");
+                          window.location.href = "http://localhost:9001/";
+                            }
                         }
                       });
             }
@@ -44,7 +49,7 @@
                         }),
                         statusCode : {
                             200: function(response){
-                              console.log("Success");
+                              window.location.href = "http://localhost:9001/";
                             },
                             404: function(response){
 
@@ -52,6 +57,9 @@
                             400: function(response){
 
                             },
+                            500: function(response){
+                                alert("Email Taken");
+                            }
                         }
                       });
             }
@@ -63,15 +71,16 @@
                         url: 'http://localhost:9001/checkUser/'+$("#username").val(),
                         statusCode : {
                             200: function(response){
+                                console.log("Present");
                                 $("#loginDiv").show();
                                 $("#registerDiv").hide();
-                                $("#message").val("You've already registered, login");
+                                $("#message").html("You've already registered, login");
                                 $("#btn").attr("onclick","login()");
                             },
                             404: function(response){
                                 $("#registerDiv").show();
                                 $("#loginDiv").show();
-                                $("#message").val("Register");
+                                $("#message").html("Register");
                                 $("#btn").attr("onclick","register()");
                             },
                             400: function(response){
@@ -146,20 +155,38 @@
         </script>
     </head>
     <body onload="init()">
-        <iframe id="ifr" src="http://127.0.0.1:9000/dummyPage"></iframe>
-        <p id="message">Enter username</p>
+        <iframe id="ifr" src="http://127.0.0.1:9000/dummyPage" style="display:none"></iframe>
         <br/>
-        USERNAME : <input type="text" id="username"></input>
-        <div id="loginDiv">
-            PASSWORD : <input type="password" id="password"></input>
-        </div>
-        <div id="registerDiv">
-          First Name : <input type="text" id="firstname"></input>
-          Last Name : <input type="text" id="lastname"></input>
-          Email : <input type="email" id="email"></input>
-          Superpower : <input type="text" id="superpower"></input>
-        </div>
         <br/>
-        <button id="btn" onclick="verify()">Go</button>
+        <br/>
+        <div class="container">
+            <div class="col-md-4"></div>
+            <div class="col-md-4 well" style="text-align:center">
+                <p id="message">Enter Username to Begin</p>
+                <div class="container col-md-12 form-group">
+                    <input type="text" id="username" class="form-control"  placeholder="Username"></input>
+                </div>
+                <br/>
+                <br/>
+                <div id="loginDiv" class="container col-md-12 form-group">
+                    <input type="password" id="password" class="form-control" placeholder="Password"></input>
+                </div>
+                <div id="registerDiv" class="container col-md-12 form-group">
+                    <input class="form-control" type="text" id="firstname" placeholder="First Name"></input>
+                    <br/>
+                    <input class="form-control" type="text" id="lastname" placeholder="Last Name"></input>
+                    <br/>
+                    <input class="form-control" type="email" id="email" placeholder="Email"></input>
+                    <br/>
+                    <input class="form-control" type="text" id="superpower" placeholder="Superpower"></input>
+                </div>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <button id="btn" class="btn btn-default" onclick="verify()">Go</button>
+            </div>
+            <div class="col-md-4"></div>
+        </div>
     </body>
 </html>
