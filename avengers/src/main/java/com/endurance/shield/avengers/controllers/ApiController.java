@@ -74,7 +74,6 @@ public class ApiController {
             servletResponse.setStatus(jsonResponse.getStatus());
             if(jsonResponse.getStatus() == 200)
             {
-                userDetails.put("time", String.valueOf(System.currentTimeMillis()));
                 String token = KeyManager.encrypt(this.env.getProperty("secret.key"),userDetails);
                 Cookie cookie = new Cookie("token", token);
                 cookie.setPath("/");
@@ -130,6 +129,8 @@ public class ApiController {
     @RequestMapping(value = "/verifyToken",method = RequestMethod.POST)
     public void verifyToken(@RequestBody Map<String,String> cookieDetails, HttpServletResponse servletResponse)
     {
+        System.out.println("In verifyToken, cookie is "+cookieDetails.get("cookie"));
+        System.out.println(cookieDetails);
         String cookie = cookieDetails.get("cookie");
         try{
             HttpResponse<JsonNode> jsonResponse = Unirest.post("http://127.0.0.1:6969/checkCookie")

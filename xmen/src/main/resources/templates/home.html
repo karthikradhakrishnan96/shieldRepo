@@ -6,6 +6,12 @@
                 integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
                 crossorigin="anonymous"></script>
         <script>
+            function init()
+            {
+                fetchToDos();
+                fetchBios();
+            }
+
             function fetchToDos()
             {
                 $.ajax({
@@ -17,9 +23,20 @@
                         }
                       });
             }
+            function fetchBios()
+            {
+                $.ajax({
+                        type: "GET",
+                        url: "http://localhost:9001/getAllBio",
+                        success : function(data){
+                          toDos = JSON.parse(data);
+                          console.log(toDos);
+                        }
+                      });
+            }
         </script>
     </head>
-    <body onload="fetchToDos()">
+    <body onload="init()">
         Hello from home
         <div id="toDos">
 

@@ -73,7 +73,6 @@ public class ApiController {
             servletResponse.setStatus(jsonResponse.getStatus());
             if(jsonResponse.getStatus() == 200)
             {
-                userDetails.put("time", String.valueOf(System.currentTimeMillis()));
                 String token = KeyManager.encrypt(this.env.getProperty("secret.key"),userDetails);
                 Cookie cookie = new Cookie("token", token);
                 cookie.setPath("/");
@@ -129,6 +128,8 @@ public class ApiController {
     @RequestMapping(value = "/verifyToken",method = RequestMethod.POST)
     public void verifyToken(@RequestBody Map<String,String> cookieDetails, HttpServletResponse servletResponse)
     {
+        System.out.println("In verifyToken, cookie is "+cookieDetails.get("cookie"));
+        System.out.println(cookieDetails);
         String cookie = cookieDetails.get("cookie");
         try{
             HttpResponse<JsonNode> jsonResponse = Unirest.post("http://127.0.0.1:6969/checkCookie")
@@ -145,6 +146,10 @@ public class ApiController {
                         .queryString("username", userDetails.get("username"))
                         .asJson();
                 String responseJSONString = jsonResponse.getBody().toString();
+                System.out.println("Cookie verified in verify token");
+                System.out.println(responseJSONString);
+                System.out.println(jsonResponse);
+
                 Map<String,String> user = KeyManager.jsonToMap(responseJSONString);
                 String squad = user.get("squad");
                 if(!squad.equals("BOTH"))
@@ -160,12 +165,15 @@ public class ApiController {
                 }
                 System.out.println(user);
             }
-            servletResponse.setStatus(404);
+            else {
+                servletResponse.setStatus(404);
+            }
         }
         catch (UnirestException e)
         {
 
         }
+        System.out.println("Verify token is returning"+servletResponse.getStatus());
     }
     @RequestMapping(value = "/becomeBoth",method = RequestMethod.POST)
     public void becomeBoth(@RequestBody Map<String,String> cookieMap, HttpServletResponse servletResponse){
@@ -173,8 +181,10 @@ public class ApiController {
         Map<String,String> userDetails = KeyManager.decrypt(this.env.getProperty("secret.key"),cookie);
         Cookie setCookie = new Cookie("token", cookie);
         setCookie.setPath("/");
+        System.out.println("'Become both has userDetails as: "+userDetails);
         setCookie.setMaxAge(265 * 24 * 60 * 60);
         servletResponse.addCookie(setCookie);
+        System.out.println(userDetails.get("username"));
         System.out.println("Cookie in becomeBoth: "+cookie);
         try {
             HttpResponse<JsonNode> jsonResponse = Unirest.post("http://127.0.0.1:6969/makeBoth")
@@ -184,10 +194,45 @@ public class ApiController {
             System.out.println(jsonResponse);
             servletResponse.setStatus(jsonResponse.getStatus());
         } catch (UnirestException e) {
-
+            servletResponse.setStatus(400);
         }
 
     }
+
+    @RequestMapping(value = "/getAllBio",method = RequestMethod.GET)
+    public String getAllBio(@CookieValue(value = "token", defaultValue = "") String encrypted, HttpServletResponse servletResponse)
+    {
+        System.out.println("In Get all bio");
+        Map<String ,String> userDetails = KeyManager.decrypt(this.env.getProperty("secret.key"),encrypted);
+        Map<String,String> cookieMap = new HashMap<>();
+        cookieMap.put("cookie",encrypted);
+        try
+        {
+            HttpResponse<JsonNode> jsonResponse = Unirest.post("http://127.0.0.1:6969/checkCookie")
+                    .header("accept", "application/json")
+                    .header("Content-Type","application/json")
+                    .body(new JSONObject(cookieMap))
+                    .asJson();
+            if(jsonResponse.getStatus() == 200)
+            {
+                jsonResponse = Unirest.get("http://127.0.0.1:6969/getAllBio")
+                        .header("accept", "application/json")
+                        .header("Content-Type","application/json")
+                        .queryString("username",userDetails.get("username"))
+                        .asJson();
+                System.out.println("Returning "+jsonResponse.getBody().toString());
+                return jsonResponse.getBody().toString();
+            }
+        }
+        catch (Exception e)
+        {
+
+        }
+        return null;
+    }
+
+
+
 
 
 }

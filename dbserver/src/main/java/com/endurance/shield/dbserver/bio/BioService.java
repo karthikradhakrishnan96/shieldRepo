@@ -1,7 +1,11 @@
 package com.endurance.shield.dbserver.bio;
 
+import com.endurance.shield.dbserver.todoList.Type;
+import com.endurance.shield.dbserver.users.Squad;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * Created by adeshk on 17/6/17.
@@ -12,8 +16,8 @@ public class BioService {
     @Autowired
     private BioRepository bioRepository;
 
-    public Bio getBio(int id) {
-        return bioRepository.findOne(id);
+    public Bio getBio(String username) {
+        return bioRepository.findOne(username);
     }
 
 
@@ -23,5 +27,10 @@ public class BioService {
 
     public void updateBio(Bio bio) {
         bioRepository.save(bio);
+    }
+
+    public List<Bio> getAllBio(Squad squad) {
+            List<Type> types = squad.getTypes();
+            return this.bioRepository.findByTypeIn(types);
     }
 }

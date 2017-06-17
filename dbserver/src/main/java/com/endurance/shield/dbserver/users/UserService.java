@@ -28,6 +28,7 @@ public class UserService {
     }
 
     public void makeBoth(String username) {
+        System.out.println(userRepository.findAll());
         User user = this.userRepository.findOne(username);
         user.setSquad(Squad.BOTH);
         userRepository.save(user);

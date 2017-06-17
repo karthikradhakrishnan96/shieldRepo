@@ -28,6 +28,7 @@ public class WebController {
 
     @RequestMapping("/")
     public String hello(@CookieValue(value = "token", defaultValue = "") String encrypted, HttpServletResponse servletResponse) {
+        System.out.println("In Web controller for /");
         if(encrypted.equals(""))
             return "index";
         else

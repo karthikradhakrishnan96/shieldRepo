@@ -68,6 +68,9 @@ public class UserController {
     )
     public void makeBoth(@RequestBody String username)
     {
+        System.out.println(username+" Got in makeBoth");
+        //TODO: Fix Unirest
+        username = username.split("=")[1];
         userService.makeBoth(username);
     }
 

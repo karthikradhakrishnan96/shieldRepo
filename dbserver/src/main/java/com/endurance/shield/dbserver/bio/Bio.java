@@ -1,5 +1,8 @@
 package com.endurance.shield.dbserver.bio;
 
+import com.endurance.shield.dbserver.todoList.Type;
+import com.endurance.shield.dbserver.users.Squad;
+
 import javax.persistence.*;
 
 /**
@@ -8,18 +11,16 @@ import javax.persistence.*;
 @Entity
 public class Bio {
     @Id
-    @SequenceGenerator(name = "seq_contacts", sequenceName = "seq_contacts")
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "seq_contacts")
-    private int id;
-    private String bioHtml;
     private String userName;
+    private String bioHtml;
+    private Type type;
 
-    public int getId() {
-        return id;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getBioHtml() {
@@ -30,22 +31,25 @@ public class Bio {
         this.bioHtml = bioHtml;
     }
 
-    public String getUserName() {
-        return userName;
+    public Type getType() {
+        return type;
     }
 
-    public void setUserName(String userName) {
+    public void setType(Type type) {
+        this.type = type;
+    }
+
+    public Bio(String userName, String bioHtml, Type type) {
+
         this.userName = userName;
-    }
-
-    public Bio(int id, String bioHtml, String userName) {
-
-        this.id = id;
         this.bioHtml = bioHtml;
-        this.userName = userName;
+        this.type = type;
     }
 
     public Bio() {
 
     }
+
+
+
 }
