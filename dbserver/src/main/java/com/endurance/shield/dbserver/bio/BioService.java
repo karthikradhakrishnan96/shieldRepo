@@ -2,6 +2,8 @@ package com.endurance.shield.dbserver.bio;
 
 import com.endurance.shield.dbserver.todoList.Type;
 import com.endurance.shield.dbserver.users.Squad;
+import com.endurance.shield.dbserver.users.User;
+import com.endurance.shield.dbserver.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,8 @@ public class BioService {
 
     @Autowired
     private BioRepository bioRepository;
+    @Autowired
+    private UserService userService;
 
     public Bio getBio(String username) {
         return bioRepository.findOne(username);
@@ -29,8 +33,12 @@ public class BioService {
         bioRepository.save(bio);
     }
 
-    public List<Bio> getAllBio(Squad squad) {
-            List<Type> types = squad.getTypes();
-            return this.bioRepository.findByTypeIn(types);
+    public List<Bio> getAllBio(String username) {
+        System.out.println("GETTING FOR: "+username);
+        User user = userService.userExists(username);
+        System.out.println("SQUAD: "+user.getSquad().getTypes());
+        List<Type> types = user.getSquad().getTypes();
+        System.out.println(bioRepository.findAll());
+        return this.bioRepository.findByTypeIn(types);
     }
 }

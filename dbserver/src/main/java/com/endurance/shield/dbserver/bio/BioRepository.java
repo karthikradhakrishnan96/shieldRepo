@@ -11,5 +11,6 @@ import java.util.List;
  */
 public interface BioRepository extends CrudRepository<Bio,String> {
 
+
     List<Bio> findByTypeIn(List<Type> types);
 }

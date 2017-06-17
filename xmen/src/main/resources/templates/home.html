@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <style>
+            .toDo
+            {
+                border: 2px solid black;
+            }
+        </style>
         <script
                 src="https://code.jquery.com/jquery-3.2.1.min.js"
                 integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
@@ -19,7 +25,7 @@
                         url: "http://localhost:9001/fetchToDos",
                         success : function(data){
                           toDos = JSON.parse(data);
-
+                          populateToDos(toDos);
                         }
                       });
             }
@@ -29,16 +35,137 @@
                         type: "GET",
                         url: "http://localhost:9001/getAllBio",
                         success : function(data){
-                          toDos = JSON.parse(data);
-                          console.log(toDos);
+                          bios = JSON.parse(data);
+                          console.log(bios);
+                          populateBios(bios);
                         }
                       });
             }
+            function addToDo()
+            {
+                $.ajax({
+                        type: "POST",
+                        url: "http://localhost:9001/createTodo",
+                        dataType: 'json',
+                        contentType: "application/json; charset=utf-8",
+                        data: JSON.stringify({
+                        "task":$("#task").val(),
+                        "private":$("input[name='squad']:checked").val(),
+                        }),
+                        statusCode : {
+                            200: function(response){
+                              fetchToDos();
+                            },
+                            404: function(response){
+
+                            },
+                            400: function(response){
+
+                            },
+                        }
+                      });
+            }
+            function addBio()
+            {
+                $.ajax({
+                        type: "POST",
+                        url: "http://localhost:9001/createBio",
+                        dataType: 'json',
+                        contentType: "application/json; charset=utf-8",
+                        data: JSON.stringify({
+                        "html":$("#bio").val(),
+                        }),
+                        statusCode : {
+                            200: function(response){
+                              fetchBios();
+                            },
+                            404: function(response){
+
+                            },
+                            400: function(response){
+
+                            },
+                        }
+                      });
+            }
+            function populateToDos(toDos)
+            {
+                contentDiv = document.getElementById("toDos");
+                contentDiv.innerHTML = "";
+                console.log(toDos);
+                for(var i=0;i!=toDos.length;i++)
+                {
+                    console.log(toDos[i]);
+                    mDiv = document.createElement("div");
+                    mDiv.className = "toDo";
+                    mBtn = document.createElement("button");
+                    mBtn.innerHTML = "Remove";
+                    mBtn.addEventListener("click",removeToDo,false,toDos[i]);
+                    mBtn.myData = toDos[i];
+                    mP = document.createElement("span");
+                    mP.innerHTML = toDos[i].task + " FOR " + toDos[i].type
+                    mDiv.appendChild(mP);
+                    mDiv.appendChild(mBtn);
+                    if(!toDos[i].closed)
+                        contentDiv.appendChild(mDiv);
+                }
+            }
+            function removeToDo(event)
+            {
+                toDo = event.target.myData;
+                console.log("TODO"+toDo);
+                $.ajax({
+                        type: "POST",
+                        url: "http://localhost:9001/markAsDone",
+                        dataType: 'json',
+                        contentType: "application/json; charset=utf-8",
+                        data: JSON.stringify(toDo),
+                        statusCode : {
+                            200: function(response){
+                              console.log("Sucess");
+                              fetchToDos();
+                            },
+                            404: function(response){
+
+                            },
+                            400: function(response){
+
+                            },
+                        }
+                      });
+            }
+            function populateBios(bios)
+            {
+                contentDiv = document.getElementById("bios");
+                contentDiv.innerHTML = "";
+                console.log(bios);
+                for(var i=0;i!=bios.length;i++)
+                {
+                    mDiv = document.createElement("div");
+                    mDiv.className = "toDo";
+                    mDiv.innerHTML = bios[i].userName + " : " + bios[i].bioHtml;
+                    contentDiv.appendChild(mDiv);
+                }
+            }
+
         </script>
     </head>
     <body onload="init()">
         Hello from home
+        <button onclick="addToDo()">Add ToDo</button>
+        <button onclick="addBio()">Add Bio</button>
+        TODOS
+        <input type="text" placeholder="Task to complete" id="task"></input>
+        <label><input type="radio" name="squad" value="true"></input>Private</label>
+        <label><input type="radio" name="squad" value="false"></input>Squad</label>
+
+        BIOS
+        <input type="text" placeholder="Update Bio" id="bio"></input>
         <div id="toDos">
+
+        </div>
+        BIOS
+        <div id="bios">
 
         </div>
         <form method="post" action="/logoutUser">

@@ -19,8 +19,7 @@ public class BioController {
     @Autowired
     private BioService bioService;
 
-    @Autowired
-    private UserService userService;
+
 
     public BioController(){
 
@@ -32,18 +31,18 @@ public class BioController {
     }
 
     @RequestMapping(value = "/createBio",method = RequestMethod.POST)
-    public void createBio(@RequestParam Bio bio){
+    public void createBio(@RequestBody Bio bio){
+
         bioService.createBio(bio);
     }
 
     @RequestMapping(value = "/updateBio",method = RequestMethod.PUT)
-    public void updateBio(@RequestParam Bio bio){
+    public void updateBio(@RequestBody Bio bio){
         bioService.updateBio(bio);
     }
 
     @RequestMapping(value = "/getAllBio",method = RequestMethod.GET)
     public List<Bio> getAllBio(@RequestParam String username){
-        User user = userService.userExists(username);
-        return bioService.getAllBio(user.getSquad());
+        return bioService.getAllBio(username);
     }
 }
