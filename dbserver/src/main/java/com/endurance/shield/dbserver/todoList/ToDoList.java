@@ -1,5 +1,6 @@
 package com.endurance.shield.dbserver.todoList;
-import com.endurance.shield.dbserver.users.User;
+
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.persistence.*;
 
@@ -8,13 +9,26 @@ import javax.persistence.*;
 public class ToDoList{
 
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @SequenceGenerator(name = "seq_contacts", sequenceName = "seq_contacts")
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "seq_contacts")
     private int id;
+
     private String task;
     private Type type;
+
+    @Value("false")
     private boolean isClosed;
-    @ManyToOne
-    private User user;
+
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    private String username;
 
     public ToDoList() {
     }
@@ -51,20 +65,10 @@ public class ToDoList{
         isClosed = closed;
     }
 
-    public User getUser() {
-        return user;
-    }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public ToDoList(int id, String task, Type type, boolean isClosed, User user) {
-
-        this.id = id;
+    public ToDoList(String task, Type type, String username) {
         this.task = task;
         this.type = type;
-        this.isClosed = isClosed;
-        this.user = user;
+        this.username = username;
     }
 }

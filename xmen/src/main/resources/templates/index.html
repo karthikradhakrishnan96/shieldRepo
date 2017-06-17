@@ -15,7 +15,7 @@
             {
               $.ajax({
                         type: "POST",
-                        url: "http://127.0.0.1:9000/loginUser",
+                        url: "http://localhost:9001/loginUser",
                         dataType: 'json',
                         contentType: "application/json; charset=utf-8",
                         data: JSON.stringify({
@@ -31,7 +31,7 @@
             {
               $.ajax({
                         type: "POST",
-                        url: "http://127.0.0.1:9000/createUser",
+                        url: "http://localhost:9001/createUser",
                         dataType: 'json',
                         contentType: "application/json; charset=utf-8",
                         data: JSON.stringify({
@@ -60,7 +60,7 @@
                 $.ajax
                     ({
                         type: "GET",
-                        url: 'http://127.0.0.1:9000/checkUser/'+$("#username").val(),
+                        url: 'http://localhost:9001/checkUser/'+$("#username").val(),
                         statusCode : {
                             200: function(response){
                                 $("#loginDiv").show();
@@ -86,20 +86,18 @@
             {
                 window.addEventListener("message",recvCreds,false);
                 ifrWin = document.getElementById("ifr").contentWindow;
-                ifrWin.postMessage("Get cookie","http://localhost:9001");
+                ifrWin.postMessage("send nudes","http://127.0.0.1:9000");
             }
             function recvCreds(event)
             {
                 cookie = event.data;
-                alert(cookie);
-
                 if(cookie.length!=0)
                 {
                     //TODO: Allow for multiple cookies
                     cookie = cookie.split("=")[1];
                     $.ajax({
                         type: "POST",
-                        url: "http://127.0.0.1:9000/verifyToken",
+                        url: "http://localhost:9001/verifyToken",
                         dataType: 'json',
                         contentType: "application/json; charset=utf-8",
                         data: JSON.stringify({
@@ -107,7 +105,7 @@
                         }),
                         statusCode : {
                             200: function(response){
-                              window.location.href = "http://127.0.0.1:9000/";
+                              window.location.href = "http://localhost:9001/";
                             },
                             404: function(response){
                               console.log("400");
@@ -116,18 +114,18 @@
                                 var result = confirm("Do you have what it takes to be part of the X-men");
                                 if(result)
                                 {
-                                    becomeAvenger();
+                                    becomeXmen();
                                 }
                             },
                         }
                       });
                 }
             }
-            function becomeAvenger()
+            function becomeXmen()
             {
                 $.ajax({
                         type: "POST",
-                        url: "http://127.0.0.1:9000/becomeBoth",
+                        url: "http://localhost:9001/becomeBoth",
                         dataType: 'json',
                         contentType: "application/json; charset=utf-8",
                         data: JSON.stringify({
@@ -135,7 +133,7 @@
                         }),
                         statusCode : {
                             200: function(response){
-                              window.location.href = "http://127.0.0.1:9000/";
+                              window.location.href = "http://localhost:9001/";
                             },
                             404: function(response){
                               console.log("400");
@@ -148,7 +146,7 @@
         </script>
     </head>
     <body onload="init()">
-        <iframe id="ifr" src="http://localhost:9001/dummyPage"></iframe>
+        <iframe id="ifr" src="http://127.0.0.1:9000/dummyPage"></iframe>
         <p id="message">Enter username</p>
         <br/>
         USERNAME : <input type="text" id="username"></input>

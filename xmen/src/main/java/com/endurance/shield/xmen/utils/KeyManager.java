@@ -1,8 +1,7 @@
-package com.endurance.shield.avengers.utils;
+package com.endurance.shield.xmen.utils;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;

@@ -30,7 +30,10 @@ public class User {
         this.superPower = superPower;
         this.squad = squad;
     }
-
+    public User(String username)
+    {
+        this.username = username;
+    }
     public User() {
     }
 

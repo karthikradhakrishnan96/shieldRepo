@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
  */
 
 @Service
-class UserService {
+public class UserService {
 
     @Autowired
     private UserRepository userRepository;
@@ -23,7 +23,13 @@ class UserService {
         return user != null && user.getPassword().equals(password);
     }
 
-    User userExists(String userName) {
+    public User userExists(String userName) {
         return this.userRepository.findOne(userName);
+    }
+
+    public void makeBoth(String username) {
+        User user = this.userRepository.findOne(username);
+        user.setSquad(Squad.BOTH);
+        userRepository.save(user);
     }
 }

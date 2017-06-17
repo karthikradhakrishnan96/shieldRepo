@@ -1,6 +1,5 @@
-package com.endurance.shield.avengers.controllers;
+package com.endurance.shield.xmen.controllers;
 
-import com.endurance.shield.avengers.utils.KeyManager;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
@@ -9,8 +8,10 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-import sun.misc.Contended;
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
@@ -80,7 +81,7 @@ public class WebController {
         }
     }
     @RequestMapping(value = "/dummyPage",method = RequestMethod.GET)
-    @CrossOrigin(origins = "http://localhost:9001")
+    @CrossOrigin(origins = "http://127.0.0.1:9000")
     public String dummyPage(HttpServletResponse servletResponse)
     {
         return "dummy";

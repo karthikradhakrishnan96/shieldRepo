@@ -1,6 +1,6 @@
-package com.endurance.shield.avengers.controllers;
+package com.endurance.shield.xmen.controllers;
 
-import com.endurance.shield.avengers.utils.KeyManager;
+import com.endurance.shield.xmen.utils.KeyManager;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**

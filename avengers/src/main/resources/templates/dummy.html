@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script>
+            function init()
+            {
+                window.addEventListener("message",giveCreds,false);
+            }
+            function giveCreds(event)
+            {
+                event.source.postMessage(document.cookie,event.origin);
+            }
+        </script>
+    </head>
+    <body onload="init()">
+
+    </body>
+</html>

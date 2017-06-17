@@ -62,5 +62,13 @@ public class UserController {
         }
         return user;
     }
+    @RequestMapping(
+            value = "/makeBoth",
+            method = RequestMethod.POST
+    )
+    public void makeBoth(@RequestBody String username)
+    {
+        userService.makeBoth(username);
+    }
 
 }
