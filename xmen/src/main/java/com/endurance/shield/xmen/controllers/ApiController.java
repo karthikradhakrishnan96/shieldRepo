@@ -6,6 +6,7 @@ import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.sun.org.apache.xpath.internal.operations.Bool;
+import org.apache.tomcat.jni.Time;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -14,6 +15,7 @@ import sun.misc.Cleaner;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -75,6 +77,8 @@ public class ApiController {
             servletResponse.setStatus(jsonResponse.getStatus());
             if(jsonResponse.getStatus() == 200)
             {
+                Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+                userDetails.put("time", timestamp.toString());
                 String token = KeyManager.encrypt(this.env.getProperty("secret.key"),userDetails);
                 Cookie cookie = new Cookie("token", token);
                 cookie.setPath("/");
@@ -82,6 +86,7 @@ public class ApiController {
                 servletResponse.addCookie(cookie);
                 Map<String,String> cookieMap = new HashMap<>();
                 cookieMap.put("cookie",token);
+                cookieMap.put("username",userDetails.get("username"));
                 jsonResponse = Unirest.post("http://127.0.0.1:6969/createCookie")
                         .header("accept", "application/json")
                         .header("Content-Type","application/json")

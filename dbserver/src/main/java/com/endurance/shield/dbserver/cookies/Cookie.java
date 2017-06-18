@@ -11,12 +11,22 @@ import javax.persistence.Id;
 public class Cookie {
     @Id
     private String cookie;
+    private String username;
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
     public Cookie() {
     }
 
-    public Cookie(String cookie) {
+    public Cookie(String cookie,String username) {
         this.cookie = cookie;
+        this.username=username;
     }
 
     public String getCookie() {

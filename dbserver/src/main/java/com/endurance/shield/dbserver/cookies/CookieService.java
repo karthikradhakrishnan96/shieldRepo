@@ -28,4 +28,12 @@ public class CookieService {
     public List<Cookie> getAll() {
         return (List<Cookie>) this.cookieRepository.findAll();
     }
+
+    public List<Cookie> getActiveSession(Cookie cookie) {
+        return (List<Cookie>) this.cookieRepository.findByUsernameIn(cookie.getUsername());
+    }
+
+    public String getCookieUser(Cookie cookie) {
+        return this.cookieRepository.findOne(cookie.getCookie()).getUsername();
+    }
 }

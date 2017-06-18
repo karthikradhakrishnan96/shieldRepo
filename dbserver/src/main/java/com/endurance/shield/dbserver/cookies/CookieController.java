@@ -23,6 +23,7 @@ public class CookieController {
     @RequestMapping(value = "/createCookie",method = RequestMethod.POST)
     public void createCookie(@RequestBody Cookie cookie)
     {
+        System.out.println(cookie);
         this.cookieService.createCookie(cookie);
     }
     @RequestMapping(value = "/deleteCookie",method = RequestMethod.DELETE)
@@ -43,5 +44,18 @@ public class CookieController {
     public List<Cookie> getAll()
     {
         return this.cookieService.getAll();
+    }
+
+    @RequestMapping(value = "/getCookieUser",method = RequestMethod.POST)
+    public String getCookieUser(Cookie cookie){ return this.cookieService.getCookieUser(cookie);}
+
+    @RequestMapping(value = "/getActiveSession",method = RequestMethod.POST)
+    public List<Cookie> getActiveSession(@RequestBody Cookie cookie){
+        System.out.println(cookie+" is the cookie");
+        String user=getCookieUser(cookie);
+        System.out.println(user+" is its user");
+        cookie.setUsername(user);
+        System.out.println(this.cookieService.getActiveSession(cookie).toString());
+        return this.cookieService.getActiveSession(cookie);
     }
 }

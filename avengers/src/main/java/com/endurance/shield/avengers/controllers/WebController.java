@@ -15,6 +15,7 @@ import sun.misc.Contended;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -85,5 +86,25 @@ public class WebController {
     public String dummyPage(HttpServletResponse servletResponse)
     {
         return "dummy";
+    }
+
+    @RequestMapping(value = "/getActiveSession",method = RequestMethod.GET)
+    public String getActiveSession(@CookieValue(value = "token", defaultValue = "") String encrypted, HttpServletResponse servletResponse)
+    {
+       try{
+           Map<String,String> cookieMap = new HashMap<>();
+           cookieMap.put("cookie",encrypted);
+           HttpResponse<JsonNode> jsonResponse = Unirest.post("http://127.0.0.1:6969/getActiveSession")
+                   .header("accept", "application/json")
+                   .header("Content-Type","application/json")
+                   .body(new JSONObject(cookieMap))
+                   .asJson();
+           System.out.println(jsonResponse.getStatus());
+           System.out.println(jsonResponse.getBody().toString()+" this is");
+       }
+       catch (UnirestException e){
+
+       }
+       return null;
     }
 }

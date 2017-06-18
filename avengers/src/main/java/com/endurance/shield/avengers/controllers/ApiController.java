@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -74,6 +75,8 @@ public class ApiController {
             servletResponse.setStatus(jsonResponse.getStatus());
             if(jsonResponse.getStatus() == 200)
             {
+                Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+                userDetails.put("time", timestamp.toString());
                 String token = KeyManager.encrypt(this.env.getProperty("secret.key"),userDetails);
                 Cookie cookie = new Cookie("token", token);
                 cookie.setPath("/");
@@ -81,6 +84,7 @@ public class ApiController {
                 servletResponse.addCookie(cookie);
                 Map<String,String> cookieMap = new HashMap<>();
                 cookieMap.put("cookie",token);
+                cookieMap.put("username",userDetails.get("username"));
                 jsonResponse = Unirest.post("http://127.0.0.1:6969/createCookie")
                         .header("accept", "application/json")
                         .header("Content-Type","application/json")
