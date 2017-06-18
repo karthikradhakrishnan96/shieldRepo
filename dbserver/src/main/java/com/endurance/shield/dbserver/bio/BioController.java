@@ -33,7 +33,6 @@ public class BioController {
 
     @RequestMapping(value = "/createBio",method = RequestMethod.POST)
     public void createBio(@RequestBody Bio bio){
-
         bioService.createBio(bio);
     }
 
