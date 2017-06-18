@@ -17,6 +17,9 @@ Functional Requirements Covered:
   - Single logout for both websites
   - Seamless and secure login between two websites
 
+### Architecture
+
+![pic](https://github.com/karthikradhakrishnan96/shieldRepo/blob/master/marvel-architecture.png)
 
 DBServer : Stores the Database of users, toDos, bios, and active tokens. Exposes REST APIs to edit the database which is consumed only by the AVENGERS and XMEN servers. 
 
