@@ -10,9 +10,15 @@ import javax.persistence.*;
  */
 @Entity
 public class Bio {
+
     @Id
+    @SequenceGenerator(name = "seq_contacts", sequenceName = "seq_contacts")
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "seq_contacts")
+    private int id;
+    @Column(name="userName")
     private String userName;
     private String bioHtml;
+    @Column(name="type")
     private Type type;
 
     public String getUserName() {
@@ -49,7 +55,11 @@ public class Bio {
     public Bio() {
 
     }
+    public int getId() {
+        return id;
+    }
 
-
-
+    public void setId(int id) {
+        this.id = id;
+    }
 }

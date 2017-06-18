@@ -1,5 +1,6 @@
 package com.endurance.shield.dbserver.bio;
 
+import com.endurance.shield.dbserver.todoList.Type;
 import com.endurance.shield.dbserver.users.Squad;
 import com.endurance.shield.dbserver.users.User;
 import com.endurance.shield.dbserver.users.UserService;
@@ -32,7 +33,6 @@ public class BioController {
 
     @RequestMapping(value = "/createBio",method = RequestMethod.POST)
     public void createBio(@RequestBody Bio bio){
-
         bioService.createBio(bio);
     }
 
@@ -42,7 +42,7 @@ public class BioController {
     }
 
     @RequestMapping(value = "/getAllBio",method = RequestMethod.GET)
-    public List<Bio> getAllBio(@RequestParam String username){
-        return bioService.getAllBio(username);
+    public List<Bio> getAllBio(@RequestParam Type squad){
+        return bioService.getAllBio(squad);
     }
 }
