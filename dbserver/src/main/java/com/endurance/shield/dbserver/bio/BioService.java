@@ -33,12 +33,8 @@ public class BioService {
         bioRepository.save(bio);
     }
 
-    public List<Bio> getAllBio(String username) {
-        System.out.println("GETTING FOR: "+username);
-        User user = userService.userExists(username);
-        System.out.println("SQUAD: "+user.getSquad().getTypes());
-        List<Type> types = user.getSquad().getTypes();
+    public List<Bio> getAllBio(Type squad) {
         System.out.println(bioRepository.findAll());
-        return this.bioRepository.findByTypeIn(types);
+        return this.bioRepository.findByType(squad);
     }
 }

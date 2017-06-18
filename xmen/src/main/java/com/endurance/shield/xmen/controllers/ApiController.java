@@ -222,7 +222,7 @@ public class ApiController {
                 jsonResponse = Unirest.get("http://127.0.0.1:6969/getAllBio")
                         .header("accept", "application/json")
                         .header("Content-Type","application/json")
-                        .queryString("username",userDetails.get("username"))
+                        .queryString("squad",this.env.getProperty("app.name"))
                         .asJson();
                 System.out.println("Returning "+jsonResponse.getBody().toString());
                 return jsonResponse.getBody().toString();
